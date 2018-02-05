@@ -115,7 +115,7 @@ for (i in 1:dim(points)[1]) {
 **LOO для КNN:**
 
 Посмотрим как отработал KNN при помощи алгоритма скользящего конторля - LOO.
-![alt text](https://github.com/BalitskayaNastya/Machine_learning_BalitskayaNastya/blob/master/Метрические%20классификаторы/2_Loo_kNN/результат.png)
+![alt text](https://github.com/pyatixatka/956/blob/master/Metricheskie%20klassifikatoru/2_Loo_kNN/rezultat.png)
 
 Минимальный LOO достигается при k=6
 
@@ -193,7 +193,7 @@ kwNN = function(u, xl, k, q, ro) {
 
 Посмотрим как отработал kwKNN
 
-![alt text](https://github.com/BalitskayaNastya/Machine_learning_BalitskayaNastya/blob/master/Метрические%20классификаторы/4_kwNN/map.png)
+![alt text](https://github.com/pyatixatka/956/blob/master/Metricheskie%20klassifikatoru/kwNN/map.png)
 
 Из-за того, что **алгоритм k взвешенных ближайших соседей** учитывает порядок объектов при классификации, он выдаёт лучший результат, чем **алгоритм k ближайших соседей (kNN)**. Следовательно, объекты *x_i*, которые находятся ближе к классифицируемому объекту *u*, будут оказывать намного большее влияние, чем те *x_i*, которые дальше (из-за учёта порядка объектов).
 
@@ -258,7 +258,7 @@ a = function(x, classes, probs, mus, stds) {
 }
 ``` 
 Карта классификации:
-![](https://github.com/BalitskayaNastya/Machine_learning_BalitskayaNastya/blob/master/Байсовские%20классификаторы/NaiveBayes/classmap2.png)
+![](https://github.com/pyatixatka/956/blob/master/Bayusovskie%20klassifikatoru/NaiveBayesClass/classmap2.png)
 
 Видно, что граница принятия решения гладкая, что очень хорошо, однако можно видеть неблагоприятные решения отмеченные красным цветом. Наивный байесовский классификатор показал ошибку 4% на 2х признаках ирисов Фишера.
 
