@@ -22,3 +22,139 @@
 4. Когда все объекты *x(i)* будут перебраны, вычислить *LOO = Q / l* (*l* -- количество объектов выборки).
 
 При минимальном значении LOO получим оптимальный параметр алгоритма.
+
+### Алгоритм 1NN и K ближайших соседей (KNN)
+
+**1NN:**
+
+1. Подбирается метрика. В данной работе это декартово расстояние между векторами.
+2. Обучающая выборка сортируется в порядке увеличения расстояния от классифицируемого элемента.
+3. Элемент относят к тому классу к которому принадлежит ближайший (первый в отсортированной выборке) элемент.
+
+**КNN:**
+
+Имеется некоторая выборка *Xl*, состоящая из объектов *x(i), i = 1, ..., l* (в приложенной программе используется выборка ирисов Фишера).
+Данный алгоритм классификации относит классифицируемый объект *u* к тому классу *y*, к которому относится большинство из *k* его ближайших соседей *x(u_i)*.
+Для оценки близости классифицируемого объекта *u* к классу *y* **алгоритм kNN** использует следующую функцию:
+![](http://latex.codecogs.com/svg.latex?%5Clarge%20W%28i%2C%20u%29%20%3D%20%5Bi%20%5Cleq%20k%5D) , где *i* -- порядок соседа по расстоянию к классифицируемому объекту *u*.
+
+Реализация алгоритмов:
+
+``` R
+par(mfrow=c(2,1))
+selected = data[c(1,3,5)]
+features = dim(selected)[2]-1
+cases = dim(selected)[1]
+colors = c("red", "green", "blue")
+
+dist = function(u, v) { #это возвращает эвклидовое расстояние между двумя объектами
+  sqrt(sum((u-v)^2))
+}
+
+distances = function(obj, data, metric) { # это возвращает отсортированный набор данных по метрике для объекта  
+dists = matrix(0, cases, 2)
+  for (i in 1:cases) {
+    cost = metric(obj, data[i,1:features])
+    dists[i,] = c(cost, i)
+  }
+  idx = order(dists[,1])
+  data[dists[idx,2],]
+}
+
+NN = function(obj, data, metric=dist) { # это 1-ближайший сосед  
+sorted = distances(obj, data, metric)
+  sorted[1,features+1]
+}
+
+kNN = function(obj, data, k, metric=dist) { # это k-ближайших соседей  
+sorted = distances(obj, data, metric)
+  
+  n = 10 
+  counts = rep(0, times=n)
+  for (i in 1:k) {
+    cls = sorted[i,features+1]
+    counts[cls] = counts[cls] + 1
+  }
+  argmax = 1
+  for (i in n) {
+    if (counts[argmax] < counts[i]) {
+      argmax = i
+    }
+  }
+  
+  cls[argmax]
+}
+
+
+points = rbind(#классификация 
+  c(5.5, 2),
+  c(6.5, 4),
+  c(7, 6.5),
+  c(5.4, 2.5)
+)
+
+
+# 1NN
+plot(selected[,1], selected[,2], col=colors[selected[,features+1]], xlab="1NN", ylab="")
+for (i in 1:dim(points)[1]) {
+  pt = points[i,]
+  points(pt[1], pt[2], col=colors[NN(pt, selected)], pch=19) 
+}
+
+# kNN
+plot(selected[,1], selected[,2], col=colors[selected[,features+1]], xlab="kNN", ylab="")
+for (i in 1:dim(points)[1]) {
+  pt = points[i,]
+  points(pt[1], pt[2], col=colors[kNN(pt, selected, 7)], pch=19) 
+}
+```
+Вот что получилось:
+![alt text](https://github.com/BalitskayaNastya/Machine_learning_BalitskayaNastya/blob/master/Метрические%20классификаторы/1_NN_kNN/результат%20рисунки.png)
+
+Алгоритм kNN выглядит более качествеено. Для того чтобы привести более точное обоснование чем kNN лучше в этом случае, чем 1NN, следует прибегнуть к скользящему контролю.
+
+**LOO для КNN:**
+
+Посмотрим как отработал KNN при помощи алгоритма скользящего конторля - LOO.
+![alt text](https://github.com/BalitskayaNastya/Machine_learning_BalitskayaNastya/blob/master/Метрические%20классификаторы/2_Loo_kNN/результат.png)
+
+Минимальный LOO достигается при k=6
+
+Програмная реализация:
+``` R
+getLoo = function(x) {
+  l = dim(x)[1]
+  n = dim(x)[2] - 1
+  maxk = l
+  
+  loo = rep(0, times=maxk)
+  
+  for (i in 1:l) {
+    dists = distances(x[i,], x[-i,], dist)
+    for (k in 1:maxk) {
+      class = applykNN(dists, k)
+      if (as.integer(class) != as.integer(x[i,n+1])) {
+        loo[k] = loo[k] + 1
+      }
+    }
+    print(i)
+    print(loo)
+  }
+  loo = loo / l
+  return(loo)
+}
+which.min(res)
+# res = getLoo(selected)
+```
+### Преимущества:
+1. Простота реализации.
+2. При *k*, подобранном около оптимального, алгоритм "неплохо" классифицирует.
+
+### Недостатки:
+1. Нужно хранить всю выборку.
+2. При *k = 1* неустойчивость к погрешностям (*выбросам* -- объектам, которые окружены объектами чужого класса), вследствие чего этот выброс классифицировался неверно и окружающие его объекты, для которого он окажется ближайшим, тоже.
+2. При *k = l* алгоритм наоборот чрезмерно устойчив и вырождается в константу.
+3. Максимальная сумма объектов в *counts* может достигаться в нескольких классах одновременно.
+4. "Скудный" набор параметров.
+5. Точки, расстояние между которыми одинаково, не все будут учитываться.
+
