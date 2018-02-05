@@ -109,7 +109,7 @@ for (i in 1:dim(points)[1]) {
 }
 ```
 Вот что получилось:
-![alt text](https://github.com/BalitskayaNastya/Machine_learning_BalitskayaNastya/blob/master/Метрические%20классификаторы/1_NN_kNN/результат%20рисунки.png)
+![alt text](https://github.com/956/Metricheskie klassifikatoru/1_NN_kNN/rezultrisunok.png)
 
 Алгоритм kNN выглядит более качествеено. Для того чтобы привести более точное обоснование чем kNN лучше в этом случае, чем 1NN, следует прибегнуть к скользящему контролю.
 
