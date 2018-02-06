@@ -297,7 +297,7 @@ ldf = function(x, classes, probs, mus, covinv, covdet) {
 
 ```
 Карта классификации:
-![](https://github.com/BalitskayaNastya/Machine_learning_BalitskayaNastya/blob/master/Байсовские%20классификаторы/LDF/classmap.png)
+![](https://github.com/pyatixatka/956/blob/master/Bayusovskie%20klassifikatoru/LDF/classmap.png)
 
 Граница принятия решения кусочно-линейная, что говорит о хорошей обобщающей способности.
 
@@ -305,11 +305,11 @@ ldf = function(x, classes, probs, mus, covinv, covdet) {
 
 Поскольку ЛДФ создает кусочно-линейную границу, то мы можем её найти аналитически. Построим эти прямые «все против всех» для каждой пары классов.
 
-![](https://github.com/BalitskayaNastya/Machine_learning_BalitskayaNastya/blob/master/Байсовские%20классификаторы/LDF/splitting_lines.png)
+![](https://github.com/pyatixatka/956/blob/master/Bayusovskie%20klassifikatoru/LDF/splitting_lines.png)
 
 Сравнить с наивным байесовским классификатором:
 
-![](https://github.com/BalitskayaNastya/Machine_learning_BalitskayaNastya/blob/master/Байсовские%20классификаторы/LDF/таблица.PNG)
+![](https://github.com/pyatixatka/956/blob/master/Bayusovskie%20klassifikatoru/LDF/%D1%82%D0%B0%D0%B1%D0%BB%D0%B8%D1%86%D0%B0.PNG)
 
 ЛДФ достигает ошибки 2% на всех признаках, это хороший результат.
 
